@@ -1,58 +1,56 @@
 <?php
-    $firstname = $name = $email = $phone = $message = "";
-    $firstnameError = $nameError = $emailError = $phoneError = $messageError = "";
-    $isSuccess = false;
+    $array = array("firstname" => "", "name" => "", "email" => "", "phone" => "", "message" => "", "firstnameError" => "", "nameError" => "", "emailError" => "", "phoneError" => "", "messageError" => "", "isSuccess" => false);
     $emailTo = "jeremy@jeremytrindade.com";
 
     if($_SERVER["REQUEST_METHOD"] == "POST"){
-        $firstname = verifyInput($_POST["firstname"]);
-        $name = verifyInput($_POST["name"]);
-        $email = verifyInput($_POST["email"]);
-        $phone = verifyInput($_POST["phone"]);
-        $message = verifyInput($_POST["message"]);
-        $isSuccess = true;
+        $array["firstname"] = verifyInput($_POST["firstname"]);
+        $array["name"] = verifyInput($_POST["name"]);
+        $array["email"] = verifyInput($_POST["email"]);
+        $array["phone"] = verifyInput($_POST["phone"]);
+        $array["message"] = verifyInput($_POST["message"]);
+        $array["isSuccess"] = true;
         $emailText = "";
 
-        if(empty($firstname)){
-            $firstnameError = "Je veux connaitre ton prénom !";
-            $isSuccess = false;
+        if(empty($array["firstname"])){
+            $array["firstnameError"] = "Je veux connaitre ton prénom !";
+            $array["isSuccess"] = false;
         }
         else
-            $emailText .= "FirstName: $firstname\n";
+            $emailText .= "FirstName: {$array["firstname"]}\n";
 
-        if(empty($name)){
-            $nameError = "Et oui je veux tout savoir. Même ton nom !";
-            $isSuccess = false;
+        if(empty($array["name"])){
+            $array["nameError"] = "Et oui je veux tout savoir. Même ton nom !";
+            $array["isSuccess"] = false;
         }
         else
-            $emailText .= "Name: $name\n";
+            $emailText .= "Name: {$array["name"]}\n";
 
-        if(!isEmail($email)){
-            $emailError = "J'en ai besoin pour pouvoir te répondre !";
-            $isSuccess = false;
+        if(!isEmail($array["email"])){
+            $array["emailError"] = "J'en ai besoin pour pouvoir te répondre !";
+            $array["isSuccess"] = false;
         }
         else
-            $emailText .= "Email: $email\n";
+            $emailText .= "Email: {$array["email"]}\n";
 
-        if(!isPhone($phone)){
-            $phoneError = "Que des chiffres et des espaces, stp...";
-            $isSuccess = false;
+        if(!isPhone($array["phone"])){
+            $array["phoneError"] = "Que des chiffres et des espaces, stp...";
+            $array["isSuccess"] = false;
         }
         else
-            $emailText .= "Phone: $phone\n";
+            $emailText .= "Phone: {$array["phone"]}\n";
 
-        if(empty($message)){
-            $messageError = "Qu'est-ce que tu veux me dire ?";
-            $isSuccess = false;
+        if(empty($array["message"])){
+            $array["messageError"] = "Qu'est-ce que tu veux me dire ?";
+            $array["isSuccess"] = false;
         }
         else
-            $emailText .= "Message: $message\n";
+            $emailText .= "Message: {$array["message"]}\n";
 
-        if($isSuccess){
-            $headers = "From: $firstname $name <$email>\r\nReply-to: $email";
+        if($array["isSuccess"]){
+            $headers = "From: {$array["firstname"]} {$array["name"]} <{$array["email"]}>\r\nReply-to: {$array["email"]}";
             mail($emailTo, "Un message de votre site", $emailText, $headers);
-            $firstname = $name = $email = $phone = $message = "";
         }
+        echo json_encode($array);
     }
 
     function isPhone($var){

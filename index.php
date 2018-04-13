@@ -53,7 +53,7 @@
                         </div>
                     </div>
 
-                    <p class="thank-you" style="display: ">Votre message a bien été envoyé. Merci de m'avoir contacté :)</p>
+                    <p class="thank-you" style="display: none">Votre message a bien été envoyé. Merci de m'avoir contacté :)</p>
                     
                 </form>
             </div>
