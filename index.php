@@ -1,12 +1,21 @@
 <?php
     $firstname = $name = $email = $phone = $message = "";
     if($_SERVER["REQUEST_METHOD"] == "POST"){
-        $firstname = $_POST["firstname"];
-        $name = $_POST["name"];
-        $email = $_POST["email"];
-        $phone = $_POST["phone"];
-        $message = $_POST["message"];
+        $firstname = verifyInput($_POST["firstname"]);
+        $name = verifyInput($_POST["name"]);
+        $email = verifyInput($_POST["email"]);
+        $phone = verifyInput($_POST["phone"]);
+        $message = verifyInput($_POST["message"]);
     }
+
+    function verifyInput($var){
+        $var = trim($var); // serve tirar espaços TABB ir a linha a baixo.
+        $var = stripslashes($var); // elle va enlever tout les anti-slash.
+        $var = htmlspecialchars($var);
+
+        return $var;
+    }
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -26,7 +35,7 @@
         <div class="heading"><h2>Contactez-moi</h2></div>
         <div class="row">
             <div class="col-lg-10 col-lg-offset-1">
-                <form action="<?php echo $_SERVER["PHP_SELF"]; ?>" id="contact-form" method="post" role="form">
+                <form action="<?php echo htmlspecialchars/*serve para não se poder meter scripts no URL*/($_SERVER["PHP_SELF"]); ?>" id="contact-form" method="post" role="form">
                     <div class="row">
                         <div class="col-md-6">
                             <label for="firstname">Prénom<span class="blue"> *</span></label>
