@@ -1,24 +1,47 @@
 <?php
     $firstname = $name = $email = $phone = $message = "";
     $firstnameError = $nameError = $emailError = $phoneError = $messageError = "";
+    $isSuccess = false;
+
     if($_SERVER["REQUEST_METHOD"] == "POST"){
         $firstname = verifyInput($_POST["firstname"]);
         $name = verifyInput($_POST["name"]);
         $email = verifyInput($_POST["email"]);
         $phone = verifyInput($_POST["phone"]);
         $message = verifyInput($_POST["message"]);
+        $isSuccess = true;
 
         if(empty($firstname)){
             $firstnameError = "Je veux connaitre ton prénom !";
+            $isSuccess = false;
         }
         if(empty($name)){
             $nameError = "Et oui je veux tout savoir. Même ton nom !";
+            $isSuccess = false;
         }
-        if(empty($messageError)){
+        if(empty($message)){
             $messageError = "Qu'est-ce que tu veux me dire ?";
+            $isSuccess = false;
+        }
+        if(!isEmail($email)){
+            $emailError = "J'en ai besoin pour pouvoir te répondre !";
+            $isSuccess = false;
+        }
+        if(!isPhone($phone)){
+            $phoneError = "Que des chiffres et des espaces, stp...";
+            $isSuccess = false;
+        }
+        if($isSuccess){
+            //envoi de l'email.
         }
     }
 
+    function isPhone($var){
+        return preg_match("/^[0-9 +]*$/",$var);
+    }
+    function isEmail($var){
+        return filter_var($var, FILTER_VALIDATE_EMAIL);
+    }
     function verifyInput($var){
         $var = trim($var); // serve tirar espaços TABB ir a linha a baixo.
         $var = stripslashes($var); // elle va enlever tout les anti-slash.
@@ -66,12 +89,12 @@
                         <div class="col-md-6">
                             <label for="phone">Téléphone</label>
                             <input type="tel" id="phone" name="phone" class="form-control" placeholder="Votre téléphone" value="<?php echo $phone; ?>">
-                            <p class="comments"></p>
+                            <p class="comments"><?php echo $phoneError; ?></p>
                         </div>
                         <div class="col-md-12">
                             <label for="message">Message<span class="blue"> *</span></label>
                             <textarea id="message" name="message" class="form-control" placeholder="Votre message" rows="4" ><?php echo $message; ?></textarea>
-                            <p class="comments"></p>
+                            <p class="comments"><?php echo $messageError; ?></p>
                         </div>
                         <div class="col-md-12">
                            <p class="blue"><strong>* Ces information sont requises</strong></p>
@@ -81,7 +104,7 @@
                         </div>
                     </div>
 
-                    <p class="thank-you">Votre message a bien été envoyé. Merci de m'avoir contacté :)</p>
+                    <p class="thank-you" style="display: <?php if($isSuccess) echo 'block'; else echo 'none;' ?>">Votre message a bien été envoyé. Merci de m'avoir contacté :)</p>
                     
                 </form>
             </div>
